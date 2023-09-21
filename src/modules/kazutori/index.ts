@@ -20,7 +20,7 @@ type Game = {
 	postId: string;
 };
 
-const limitMinutes = 10;
+const limitMinutes = 60;
 
 export default class extends Module {
 	public readonly name = 'kazutori';
