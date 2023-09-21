@@ -15,7 +15,8 @@ RUN if [ $enable_mecab -ne 0 ]; then apt-get update \
   && ./bin/install-mecab-ipadic-neologd -n -y \
   && rm -rf /opt/mecab-ipadic-neologd \
   && echo "dicdir = /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd/" > /etc/mecabrc \
-  && apt-get purge git patch openssl make curl xz-utils file -y; fi
+  && apt-get purge git patch openssl make curl xz-utils file -y \
+  && apt-get autoremove -y; fi
 
 COPY . /ai
 
