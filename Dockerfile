@@ -1,6 +1,4 @@
-FROM node:lts-bullseye-slim
-
-RUN apt-get update && apt-get install -y tini
+FROM node:lts-bullseye-slim as build
 
 ARG enable_mecab=1
 
@@ -16,12 +14,25 @@ RUN if [ $enable_mecab -ne 0 ]; then apt-get update \
   && rm -rf /opt/mecab-ipadic-neologd \
   && echo "dicdir = /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd/" > /etc/mecabrc \
   && apt-get purge git patch openssl make curl xz-utils file -y \
-  && apt-get autoremove -y; fi
+  && apt-get autoremove -y; else mkdir -p /usr/lib/x86_64-linux-gnu/mecab; fi
 
 COPY . /ai
 
 WORKDIR /ai
-RUN npm install --save @types/babel__traverse@7.18.3 && npm run build
+RUN npm install --save @types/babel__traverse@7.18.3 --production --no-progress && npm run build
+RUN rm -rf src
+
+FROM node:lts-bullseye-slim as app
+
+COPY --from=build /ai .
+COPY --from=build /usr/lib/x86_64-linux-gnu/mecab /usr/lib/x86_64-linux-gnu/mecab
+
+WORKDIR /ai
+ARG enable_mecab=1
+RUN apt-get update && apt-get install -y tini \
+  && if [ $enable_mecab -ne 0 ]; then apt-get install -y --no-install-recommends mecab;fi \
+  && apt-get clean \
+  && rm -rf /var/lib/apt-get/lists/*
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD npm start

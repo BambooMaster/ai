@@ -11,3 +11,7 @@ node_modules/
 test/
 data/
 .vscode/
+
+.editorconfig
+.git
+.gitignore
