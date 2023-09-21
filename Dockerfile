@@ -24,10 +24,11 @@ RUN rm -rf src
 
 FROM node:lts-bullseye-slim as app
 
+WORKDIR /ai
+
 COPY --from=build /ai .
 COPY --from=build /usr/lib/x86_64-linux-gnu/mecab /usr/lib/x86_64-linux-gnu/mecab
 
-WORKDIR /ai
 ARG enable_mecab=1
 RUN apt-get update && apt-get install -y tini \
   && if [ $enable_mecab -ne 0 ]; then apt-get install -y --no-install-recommends mecab;fi \
