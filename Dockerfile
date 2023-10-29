@@ -1,4 +1,4 @@
-FROM node:lts-bullseye-slim as build
+FROM node:18-bullseye-slim as build
 
 ARG enable_mecab=1
 
@@ -22,7 +22,7 @@ WORKDIR /ai
 RUN npm install --save @types/babel__traverse@7.18.3 --production --no-progress && npm run build
 RUN rm -rf src
 
-FROM node:lts-bullseye-slim as app
+FROM node:18-bullseye-slim as app
 
 WORKDIR /ai
 
