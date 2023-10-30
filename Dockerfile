@@ -31,7 +31,8 @@ COPY --from=build /usr/lib/x86_64-linux-gnu/mecab /usr/lib/x86_64-linux-gnu/meca
 
 ARG enable_mecab=1
 RUN apt-get update && apt-get install -y tini \
-  && if [ $enable_mecab -ne 0 ]; then apt-get install -y --no-install-recommends mecab;fi \
+  && if [ $enable_mecab -ne 0 ]; then apt-get install -y --no-install-recommends mecab \
+  && echo "dicdir = /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd/" > /etc/mecabrc ;fi \
   && apt-get clean \
   && rm -rf /var/lib/apt-get/lists/*
 
