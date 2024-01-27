@@ -1,4 +1,6 @@
-FROM node:18-bullseye-slim as build
+FROM node:lts
+
+RUN apt-get update && apt-get install tini --no-install-recommends -y && apt-get clean && rm -rf /var/lib/apt-get/lists/*
 
 ARG enable_mecab=1
 
@@ -19,22 +21,7 @@ RUN if [ $enable_mecab -ne 0 ]; then apt-get update \
 COPY . /ai
 
 WORKDIR /ai
-RUN npm install && npm run build
-RUN rm -rf src
-
-FROM node:18-bullseye-slim as app
-
-WORKDIR /ai
-
-COPY --from=build /ai .
-COPY --from=build /usr/lib/x86_64-linux-gnu/mecab /usr/lib/x86_64-linux-gnu/mecab
-
-ARG enable_mecab=1
-RUN apt-get update && apt-get install -y tini \
-  && if [ $enable_mecab -ne 0 ]; then apt-get install -y --no-install-recommends mecab \
-  && echo "dicdir = /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd/" > /etc/mecabrc ;fi \
-  && apt-get clean \
-  && rm -rf /var/lib/apt-get/lists/*
+RUN npm install && npm run build || test -f ./built/index.js
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD npm start
