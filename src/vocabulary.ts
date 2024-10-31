@@ -201,6 +201,8 @@ export const itemPrefixes = [
 	'高圧',
 	'異常',
 	'粗挽き',
+	'膨らんだ',
+	'staticな',
 ];
 
 export const items = [
@@ -447,6 +449,17 @@ export const items = [
 	'繝九Λ縺ｮ縺ｿ縺晄ｱ',
 	'スーパーカミオカンデ',
 	'デースケドガー',
+	'Core i9',
+	'DDR5メモリ',
+	'sudo',
+	'電解コンデンサ',
+	'3端子レギュレーター',
+	'セラミックコンデンサ',
+	'八木アンテナ',
+	'MOSFET',
+	'フィルムコンデンサ',
+	'ベニテングタケ',
+	'RTX 4090',
 ];
 
 export const and = [
